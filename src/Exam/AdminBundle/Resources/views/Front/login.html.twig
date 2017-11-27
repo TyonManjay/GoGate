@@ -1,0 +1,15 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block body %}
+    <div id="login" class="container">
+        <form class="form-signin" action="/admin/login" method="post">
+            {% for type, messages in app.session.flashbag.all %}
+                <div class="alert alert-{{ type }}">{{ messages | first }}</div>
+            {% endfor %}
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <input type="text" class="input-block-level" name="username" placeholder="Username">
+            <input type="password" class="input-block-level" name="password" placeholder="Password">
+            <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+        </form>
+    </div>
+{% endblock %}

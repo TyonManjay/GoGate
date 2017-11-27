@@ -1,0 +1,105 @@
+{% extends 'ExamWebBundle::layout.html.twig' %}
+
+{% block content %}
+    {% set questions = package.questions %}
+    <div class="row">
+        <div class="medium-8 columns question">
+            <fieldset class="snow-fieldset">
+                <legend>{{ package.name }} - <span class="question-count"></span></legend>
+                <div class="relative-container">
+                    <div class="panel panel-full">
+                       <ul class="question-container">
+                           {% for question in questions %}
+                               {% set index = loop.index %}
+                               {% set attempt = enrollment.attemptsFor(question.id) | reverse | first %}
+                           <li data-id={{ index }} data-question={{ question.id }}>
+                               <p>{{ question.description | raw }}</p>
+
+                               <div class="choose">
+                                   <label>Choose Your Answer : </label>
+                                    {% for option in question.options %}
+                                        {% set opt = "opt"~index %}
+                                        <label for="{{ opt~option.id }}">
+                                            <input type="radio" name="{{ opt }}" value="{{ option.description }}" id="{{ opt~option.id }}" data-id="{{ option.id }}" {{ not attempt?: not(option.id == attempt.answer.id) ? '' : 'checked' }}> {{ option.description }}
+                                        </label>
+                                    {% endfor %}
+                               </div>
+                           </li>
+                           {% endfor %}
+                       </ul>
+                    </div>
+
+                    <div class="action row row-nomargin">
+                        <div class="medium-6 columns"><button class="button medium-12 secondary radius" id="controller-prev"><i class="fa fa-arrow-circle-o-left"></i> PREVIOUS</button></div>
+                        <div class="medium-6 columns"><button class="button medium-12 secondary radius" id="controller-next">NEXT <i class="fa fa-arrow-circle-o-right"></i></button></div>
+                    </div>
+                    <div class="frozen">
+                        <img src="{{ asset('img/loading.gif') }}">
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="medium-4 columns">
+            <fieldset class="snow-fieldset">
+                <legend>Time Remaining</legend>
+                <div class="relative-container">
+                    <div class="time">
+                        <img src="https://cdn1.iconfinder.com/data/icons/Vector-Icon-set-1-BevelAndEmboss-Net/89/alarm-clock.png"><label id="timer">-</label>
+                    </div>
+                    <div class="frozen"></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="snow-fieldset">
+                <legend>Question Palette</legend>
+                {% set eachblock = (88/divisor) | ceil %}
+
+                {% for x in 1..eachblock %}
+                    <ul class="palette-container" data-id="{{ x }}">
+                        {% set start = x == 1 ? x : (x-1)*divisor+1 %}
+                        {% set end = x == 1 ? divisor : start+divisor-1 %}
+
+                        {% if loop.last %}
+                            {% set end = (questions.count - ((x-1)*divisor))+((x-1)*divisor) %}
+                        {% endif %}
+
+                        {% for i in start..end %}
+                            <li class="palette-item" data-id={{ i }}>
+                                {{ i }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+                <input type="hidden" value="{{ eachblock }}" id="eachblock" />
+            </fieldset>
+            <div class="palette-information clearfix">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="box answered"></div>
+                        </td>
+                        <td>Answered</td>
+                        <td><div class="box skipped"></div></td>
+                        <td>Skipped</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="box not-visited"></div>
+                        </td>
+                        <td>Not Visited</td>
+                        <td>
+                            <div class="box current"></div>
+                        </td>
+                        <td>Current</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="medium-4 columns martop">
+            <form method="post" action="/exam/enrollment/finished">
+                <button type="submit" class="button success large medium-12 radius" onclick="return confirm('You still have time, finish the test now?');">End Test</button>
+            </form>
+        </div>
+    </div>
+    <input type="hidden" id="sec" value="{{ timer }}" />
+{% endblock %}

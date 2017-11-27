@@ -1,0 +1,84 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">All Participants</div>
+                <a href="/admin/participants/create" class="btn btn-primary pull-right"><i class="icon-plus icon-white"></i> New Participant</a>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Registration Id</th>
+                                <th>Name</th>
+                                <th>Birthdate</th>
+                                <th>Registered On</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for participant in participants %}
+                            <tr>
+                                <td>{{ participant.id }}</td>
+                                <td>{{ participant.registrationId }}</td>
+                                <td>{{ participant.name }}</td>
+                                <td>{{ participant.dob | date('d-M-Y') }}</td>
+                                <td>{{ participant.createdOn | date('d-M-Y') }}</td>
+                                <td>
+                                    <a href="/admin/participants/edit/{{ participant.id }}" class="btn btn-mini btn-inverse pull-right"><i class="icon-pencil icon-white"></i> Edit</a>
+                                    <a href="/admin/participants/{{ participant.id }}/enroll" class="btn btn-mini btn-inverse pull-right"><i class="icon-user icon-white"></i> Enroll</a>
+                                    <a href="javascript:void(0);" class="btn btn-mini pull-right detail" data="{{ participant.id }}"><i class="icon-zoom-in"></i> Detail</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Participant Detail</div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="mask inner"><div class="animation"></div></div>
+                <div class="detail">
+                    <div class="cover">Choose a participant</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var $detailContainer = $("div.detail");
+        var $mask = $(".mask.inner");
+
+        $("a.detail").on("click", function() {
+            var $this = $(this);
+            var $data = $this.attr("data");
+
+            $.ajax({
+                url         : "/admin/participants/detail/" + $data,
+                type        : "GET",
+                beforeSend  : function() {
+                    $mask.show();
+                }
+            }).complete(function(jqXhr, status) {
+                $mask.hide();
+
+                if(status === "success") {
+                    $detailContainer.html(jqXhr.responseText);
+                }
+            })
+        })
+    </script>
+{% endblock %}

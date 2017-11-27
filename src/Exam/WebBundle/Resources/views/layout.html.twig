@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets
+        'css/foundation.css'
+        'css/front.css'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="medium-7 columns no-padding">
+            <h4>Go Gate 2017</h4>
+        </div>
+        <div class="medium-5 columns no-padding">
+            <div class="user right">
+                <span for="icon" class="radius secondary label"><strong>Participant Name : </strong> {{ participant.name }}</span></a>
+                <form method="post" action="/logout">
+                    <a href="javascript:void(0);" onclick="if(confirm('logout?')){$(this).closest('form').submit()}"><span class="radius label alert"><span class="fa fa-sign-out"></span> logout</span></a>
+                </form>
+            </div>
+        </div>
+        <hr/>
+    </div>
+    {% block content %}{% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        'js/timer.js'
+        'js/front.js'
+        'js/foundation/foundation.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        $(document).foundation();
+    </script>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'ExamWebBundle::layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="medium-8 columns question">
+            <fieldset>
+                <legend>Exam Question - 1/100</legend>
+                <div class="relative-container">
+                    <div class="panel panel-full">
+                        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words ?</p>
+
+                        <div class="choose">
+                            <label>Choose Your Answer : </label>
+
+                            <label for="pokemonRed">
+                                <input type="radio" name="pokemon" value="Red" id="pokemonRed"> Answer 1
+                            </label>
+
+                            <label for="pokemonBlue">
+                                <input type="radio" name="pokemon" value="Blue" id="pokemonBlue"> Answer 2
+                            </label>
+
+                            <label for="pokemonRed1">
+                                <input type="radio" name="pokemon" value="Red" id="pokemonRed1"> Answer 3
+                            </label>
+
+                            <label for="pokemonBlue1">
+                                <input type="radio" name="pokemon" value="Blue" id="pokemonBlue1"> Answer 4
+                            </label>
+
+                            <label for="pokemonBlue3">
+                                <input type="radio" name="pokemon" value="Blue" id="pokemonBlue3"> Answer 5
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <div class="action row row-nomargin">
+                        <div class="medium-4 columns"><button class="button medium-12 secondary round" id="prev"><i class="fa fa-arrow-circle-o-left"></i> PREVIOUS</button></div>
+                        <div class="medium-4 columns"><button class="button medium-12 radius">SAVE & NEXT</button></div>
+                        <div class="medium-4 columns"><button class="button medium-12 secondary round" id="next">NEXT <i class="fa fa-arrow-circle-o-right"></i></button></div>
+                    </div>
+                    <div class="frozen">
+                        <img src="{{ asset('img/loading.gif') }}">
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="medium-4 columns">
+            <fieldset>
+                <legend>Time Remaining</legend>
+                <div class="relative-container">
+                    <div class="time">
+                        <img src="https://cdn1.iconfinder.com/data/icons/Vector-Icon-set-1-BevelAndEmboss-Net/89/alarm-clock.png"><label id="timer">-</label>
+                    </div>
+                    <div class="frozen"></div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="medium-4 columns">
+            <fieldset>
+                <legend>Question Palette</legend>
+                <ul class="palette-container">
+                    {% for item in 1..35 %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </fieldset>
+            <div class="palette-information clearfix">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="box answered"></div>
+                        </td>
+                        <td>Answered</td>
+                        <td><div class="box skipped"></div></td>
+                        <td>Skipped</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="box not-visited"></div>
+                        </td>
+                        <td>Not Visited</td>
+                        <td>
+                            <div class="box current"></div>
+                        </td>
+                        <td>Current</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

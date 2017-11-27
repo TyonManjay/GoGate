@@ -1,0 +1,33 @@
+{% extends 'ExamWebBundle::layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <h4>Available Package:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Package Name</th>
+                    <th>Exam Status</th>
+                    <th>Last Time Left</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if all %}
+                {% for enrollment in all %}
+                <tr>
+                    <td style="text-transform: uppercase">{{ enrollment.package.name }}</td>
+                    <td><span class="label {{ enrollment.startedOn and (enrollment.finishedOn == null) ? 'successfull' : 'secondary' }} label-full">{{ enrollment.startedOn and (enrollment.finishedOn == null) ? 'on progress' : 'not taken' }}</span></td>
+                    <td><span class="label alert label-full">{{ enrollment.timeleft }}</span></td>
+                    <td><a href="/exam/{{ enrollment.id }}" target="_self" onclick="return confirm('Start Exam?');" class="button tiny radius no-margin tiny-custom"><span class="fa fa-unlock-alt"></span> Start Exam</a></td>
+                </tr>
+                {% endfor %}
+             {% else %}
+                <tr style="text-align: center">
+                    <td colspan="4">No Package</td>
+                </tr>
+             {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

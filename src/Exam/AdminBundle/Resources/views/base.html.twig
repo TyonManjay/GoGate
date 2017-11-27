@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@ExamAdminBundle/Resources/public/css/bootstrap/bootstrap.min.css'
+        '@ExamAdminBundle/Resources/public/css/bootstrap/bootstrap-responsive.min.css'
+        '@ExamAdminBundle/Resources/public/css/jquery.easy-pie-chart.css'
+        '@ExamAdminBundle/Resources/public/css/app.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div class="mask global"><div class="animation"></div></div>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="#">Admin Panel</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav pull-right">
+                        <li class="dropdown">
+                            <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> {{ admin.name }} <i class="caret"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/admin/changePassword">Change password</a></li>
+                                <li class="divider"></li>
+                                <li><a tabindex="-1" href="/admin/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span3" id="sidebar">
+                <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+                    <li>
+                        <a href="/admin">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="/admin/participants">
+                            <span class="badge badge-info pull-right">{{ participantsCount }}</span> Participants
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/packages">
+                            <span class="badge badge-info pull-right">{{ packagesCount }}</span> Packages
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/enrollments">
+                            <span class="badge badge-info pull-right">{{ enrollmentsCount.onProgress }}</span>
+                            <span class="badge badge-success pull-right">{{ enrollmentsCount.finished }}</span>
+                            <span class="badge badge-important pull-right">{{ enrollmentsCount.notStarted }}</span>
+                            Enrollments
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="span9" id="content">
+                {% for type, messages in app.session.flashbag.all %}
+                    <div class="alert alert-{{ type }}">{{ messages | first }}</div>
+                {% endfor %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <hr>
+        <footer>
+            <p>&copy; Vibiz 2014</p>
+        </footer>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        '@ExamAdminBundle/Resources/public/js/bootstrap/bootstrap.min.js'
+        '@ExamAdminBundle/Resources/public/js/jquery.easy-pie-chart.js'
+        '@ExamAdminBundle/Resources/public/js/app.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Easy pie charts
+            $('.chart').easyPieChart({animate: 1000});
+        });
+    </script>
+{% endblock %}

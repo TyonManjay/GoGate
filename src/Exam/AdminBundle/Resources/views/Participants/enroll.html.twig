@@ -1,0 +1,49 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Enroll To Package</div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <form class="form-horizontal" action="/admin/enrollments/add" method="post">
+                        <fieldset>
+                            <legend>Participant: <em>{{ participant.name }} - {{ participant.registrationId }}</em></legend>
+                            <input type="hidden" name="participant" value="{{ participant.id }}">
+                            <div class="control-group">
+                                <label class="control-label" for="package">Package</label>
+                                <div class="controls">
+                                    <select name="package" id="package">
+                                        <option disabled selected>Choose...</option>
+                                    {% for package in availablePackages %}
+                                        <option value="{{ package.id }}">{{ package.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Enroll</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Enrolled Packages</div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <fieldset>
+                        {% include 'ExamAdminBundle:Enrollments:detail.include.html.twig' %}
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

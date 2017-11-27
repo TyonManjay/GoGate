@@ -1,0 +1,34 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        {% if errorMessage is defined %}<div class="alert alert-error">{{ errorMessage }}</div>{% endif %}
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Create New Package</div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <form class="form-horizontal" action="/admin/packages/create" method="post">
+                        <fieldset>
+                            <legend>Complete Below Data</legend>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Name</label>
+                                <div class="controls">
+                                    <input type="text" name="name" id="name" class="span6" required/>
+                                    <p class="help-block">Will be shown as packages's name</p>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="reset" class="btn">Reset</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

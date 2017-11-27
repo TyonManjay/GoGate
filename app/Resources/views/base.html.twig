@@ -1,0 +1,25 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>Exam Samay</title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+    {% block stylesheets %}{% endblock %}
+
+</head>
+<body {% block body_attr %}{% endblock %}>
+{% block body %}{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'js/vendor/modernizr.js'
+        'js/vendor/jquery.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+</body>
+</html>

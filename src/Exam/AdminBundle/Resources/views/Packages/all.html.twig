@@ -1,0 +1,42 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">All Packages</div>
+                <a href="/admin/packages/create" class="btn btn-primary pull-right"><i class="icon-plus icon-white"></i> Create New</a>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Registered On</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for package in packages %}
+                            <tr>
+                                <td>{{ package.id }}</td>
+                                <td>{{ package.name }}</td>
+                                <td>{{ package.createdOn | date('d-M-Y') }}</td>
+                                <td>
+                                    <a href="/admin/packages/edit/{{ package.id }}" class="btn btn-mini btn-inverse pull-right"><i class="icon-pencil icon-white"></i> Edit</a>
+                                    <a href="/admin/packages/{{ package.id }}/enroll" class="btn btn-mini btn-inverse pull-right"><i class="icon-user icon-white"></i> Enroll</a>
+                                    <a href="/admin/packages/{{ package.id }}/questions" class="btn btn-mini pull-right"><i class="icon-list-alt"></i> Questions ({{ package.questions | length }})</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

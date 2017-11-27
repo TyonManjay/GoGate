@@ -1,0 +1,7 @@
+admin:
+    resource:   "@ExamAdminBundle/Controller"
+    type    :   annotation
+
+WebBundle:
+  resource: "@ExamWebBundle/Controller"
+  type: annotation

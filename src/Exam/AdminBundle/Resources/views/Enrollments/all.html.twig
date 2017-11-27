@@ -1,0 +1,92 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">All Enrollments</div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Enrolled On</th>
+                            <th>Package</th>
+                            <th>Participant</th>
+                            <th>Started On</th>
+                            <th>Finished On</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for enrollment in enrollments %}
+                            <tr class="{% if enrollment.isFinished %}success{% elseif enrollment.isStarted %}info{% else %}error{% endif %}">
+                                <td>{{ enrollment.id }}</td>
+                                <td>{{ enrollment.createdOn | date('d-M-Y') }}</td>
+                                <td>{{ enrollment.package }}</td>
+                                <td>{{ enrollment.participant }} - {{ enrollment.participant.registrationId }}</td>
+                                <td>{{ enrollment.startedOn ? enrollment.startedOn | date('d-M-Y H:i:s') : '-' }}</td>
+                                <td>{{ enrollment.finishedOn ? enrollment.finishedOn | date('d-M-Y H:i:s') : '-' }}</td>
+                                <td>
+                                    {% if enrollment.isFinished %}
+                                        <a href="/admin/enrollments/detail/{{ enrollment.id }}" id="detail" class="btn btn-mini pull-right">
+                                            <i class="icon-zoom-in"></i> Detail
+                                        </a>
+                                    {% endif %}
+                                    {% if not enrollment.isStarted %}
+                                        <a href="#removeAlert" data-toggle="modal" id="remove" class="btn btn-danger btn-mini pull-right detail">
+                                            <i class="icon-trash"></i> Remove
+                                        </a>
+                                        <div id="removeAlert" class="modal hide" aria-hidden="true">
+                                            <div class="modal-header">
+                                                <button data-dismiss="modal" class="close" type="button">×</button>
+                                                <h3>Remove Enrollment</h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Once removed, participant will not be able to attend this enrollment.</p>
+                                                <p>Remove enrollment?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="/admin/enrollments/remove" method="post">
+                                                    <input type="hidden" name="id" value="{{ enrollment.id }}">
+                                                    <button data-dismiss="modal" class="btn btn-danger btn-primary" type="submit">Remove</button>
+                                                    <a data-dismiss="modal" class="btn" href="#">Cancel</a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if enrollment.isStarted and not enrollment.isFinished %}
+                                        <a href="#restartAlert" data-toggle="modal" id="restart" class="btn btn-danger btn-mini pull-right detail">
+                                            <i class="icon-repeat"></i> Restart
+                                        </a>
+                                        <div id="restartAlert" class="modal hide" aria-hidden="true">
+                                            <div class="modal-header">
+                                                <button data-dismiss="modal" class="close" type="button">×</button>
+                                                <h3>Restart Enrollment</h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Restart enrollment?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="/admin/enrollments/restart" method="post">
+                                                    <input type="hidden" name="id" value="{{ enrollment.id }}">
+                                                    <button class="btn btn-danger btn-primary" type="submit">Restart</button>
+                                                    <a data-dismiss="modal" class="btn" href="#">Cancel</a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

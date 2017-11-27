@@ -1,0 +1,6 @@
+services:
+    twig.extension.exam.admin:
+        class: Exam\AdminBundle\Twig\Extension\GlobalExtension
+        arguments: [@participantRepo, @packageRepo, @enrollmentRepo, @adminRepo, @session]
+        tags:
+            - { name: twig.extension }

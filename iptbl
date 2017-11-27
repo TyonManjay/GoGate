@@ -1,0 +1,39 @@
+*filter 
+:INPUT DROP [0:0] 
+:FORWARD ACCEPT [0:0] 
+:OUTPUT ACCEPT [0:0] 
+:logaccept - [0:0] 
+:logdrop - [0:0]
+
+# accept all loopback connections 
+-A INPUT -i lo -j ACCEPT
+
+# forward all established connections to the logaccept chain
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j logaccept
+
+# forward all icmp traffic to the logaccept chain
+-A INPUT -p icmp -j logaccept
+
+# if source ip has set up more than 5 new connections in 10 minutes, send all new connections to the logdrop chain. if source ip has set up 5 or less new connections in 10 minutes, forward to the logaccept chain.
+-A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 600 --hitcount 5 --name DEFAULT --rsource -j logdrop 
+-A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name DEFAULT --rsource 
+-A INPUT -p tcp -m tcp --dport 22 -j logaccept
+
+# cleanup rule to send all other traffic to the logdrop chain
+-A INPUT -j logdrop
+
+# allow all outbound loopback traffic
+-A OUTPUT -o lo -j ACCEPT
+
+# forward all outbound traffic to the logaccept chain
+-A OUTPUT -j logaccept
+
+# create your logaccept chain. this appends "iptables accept " to the front of the log entry and then allows the traffic to pass through
+-A logaccept -j LOG --log-prefix "iptables accept "
+-A logaccept -j ACCEPT
+
+# create your logdrop chain. this appends "iptables drop " to the front of every packet and the drops the packets
+-A logdrop -j LOG --log-prefix "iptables drop "
+-A logdrop -j DROP
+
+COMMIT

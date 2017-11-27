@@ -1,0 +1,94 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@ExamAdminBundle/Resources/public/css/bootstrap/bootstrap-datepicker.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        {% if errorMessage is defined %}<div class="alert alert-error">{{ errorMessage }}</div>{% endif %}
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Edit Participant</div>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <form class="form-horizontal" action="/admin/participants/edit" method="post">
+                        <fieldset>
+                            <legend>Complete Below Data</legend>
+                            <div class="control-group">
+                                <label class="control-label" for="registration-number">Id</label>
+                                <div class="controls">
+                                    <span>{{ participant.id }}</span>
+                                    <input type="hidden" name="id" id="id" class="span6" value="{{ participant.id }}"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="registration-number">Registration Number</label>
+                                <div class="controls">
+                                    <p>{{ participant.registrationId }}</p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Name</label>
+                                <div class="controls">
+                                    <input type="text" name="name" id="name" class="span6" value="{{ participant.name }}" required/>
+                                    <p class="help-block">Will be shown as participant's name</p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="dob">Birthdate</label>
+                                <div class="controls">
+                                    <input type="text" name="dob" class="input-xlarge datepicker" id="dob" value="{{ participant.dob | date("m/d/Y") }}">
+                                    <p class="help-block">Participant password will not be changed</p>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    '@ExamAdminBundle/Resources/public/js/bootstrap/bootstrap-datepicker.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        $(".datepicker").datepicker();
+        $(".help-inline").hide();
+        $("#registration-number").on("keypress", function() {
+            var $this = $(this);
+            var $loading = $this.siblings(".loading");
+            var $text = $this.siblings(".help-inline");
+
+            $loading.css("display", "inline-block");
+            $text.hide();
+
+            $.post("/admin/participants/checkRegistrationNumber", function(data) {
+                $loading.hide();
+
+                if(data !== "") {
+                    $this.parents(".control-group").addClass("error");
+                    $text.show();
+                }
+            });
+        })
+    </script>
+{% endblock %}

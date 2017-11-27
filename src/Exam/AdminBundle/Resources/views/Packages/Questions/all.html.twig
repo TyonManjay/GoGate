@@ -1,0 +1,124 @@
+{% extends 'ExamAdminBundle::base.html.twig' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="block">
+            <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Package Questions</div>
+                <a href="/admin/packages/{{ package.id }}/questions/add" class="btn btn-primary pull-right"><i class="icon-plus icon-white"></i> Add Question(s)</a>
+            </div>
+            <div class="block-content collapse in">
+                <div class="span12">
+                    <fieldset>
+                        <legend>
+                            {{ package.name }}
+                            <div id="collapse" class="btn btn-primary pull-right"><i class="icon-chevron-up icon-white"></i> Collapse All</div>
+                            <div id="expand" class="btn btn-primary pull-right"><i class="icon-chevron-down icon-white"></i> Expand All</div>
+                        </legend>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Question</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for question in package.questions %}
+                                <tr>
+                                    <td class="span1">{{ loop.index }}</td>
+                                    <td>
+                                        <div>
+                                            {{ question.description | raw }}
+                                            <i class="expand icon-chevron-down pull-right" rel="{{ question.id }}"></i>
+                                        </div>
+                                        <div>
+                                            <form class="ajax" action="/admin/questions/answer" method="post">
+                                                <input type="hidden" name="id" value="{{ question.id }}" />
+                                                <table id="{{ question.id }}" class="table table-bordered sub-table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Option &nbsp;&nbsp;&nbsp;<em>Choose correct option on the right column</em></th>
+                                                        <th class="text-center">Set Answer</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for option in question.options %}
+                                                        <tr class="{% if option == question.answer %}success{% else %}error{% endif %}">
+                                                            <td>{{ option.description }}</td>
+                                                            <td class="span2 text-center">
+                                                                <input class="options" type="radio" value="{{ option.id }}" name="correctOption-{{ question.id }}" {% if option == question.answer %}checked{% endif %}/>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("input.options").on("click", function() {
+                var $this = $(this);
+                var $tr = $(this).parents("tr").first();
+                var $form = $this.closest("form");
+
+                $.ajax({
+                    type        : $form.attr("method"),
+                    url         : $form.attr("action"),
+                    data        : $form.serialize(),
+                    beforeSend  : function () {
+                        $masker.start();
+                    }
+                }).complete(function(xhr, status) {
+                    $masker.stop();
+
+                    if(status === "success") {
+                        $tr.siblings(".success").toggleClass("error").toggleClass("success");
+                        $tr.toggleClass("error");
+                        $tr.toggleClass("success");
+                    }
+                });
+            });
+
+            var toggleExpand = function($el) {
+                var $table = $("table#" + $el.attr("rel"));
+
+                $el.toggleClass("icon-chevron-down");
+                $el.toggleClass("icon-chevron-up");
+
+                $table.toggle();
+            };
+
+            $(".expand").on("click", function() {
+                toggleExpand($(this));
+            });
+
+            $("div#expand").on("click", function() {
+                var $expands = $(".expand");
+
+                $.each($expands, function() { toggleExpand($(this)); })
+            });
+
+            $("div#collapse").on("click", function() {
+                var $expands = $(".expand");
+
+                $.each($expands, function() { toggleExpand($(this)); })
+            });
+        });
+    </script>
+{% endblock %}
