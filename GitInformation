@@ -1,0 +1,8 @@
+**************How To Commit Existing Application*********************
+do clone or download repository
+git bash through cmd
+git init
+git add .
+git commit -m "information file commit"
+git.......comand... https://github.com/TyonManjay/GoGate.git
+
